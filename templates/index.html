@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	
+    <style>
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 998; /* below the popup */
+        display: none;
+      }
+      @keyframes slide-up {
+        from {
+          transform: translate(-50%, 50%);
+          opacity: 0;
+        }
+        to {
+          transform: translate(-50%, -50%);
+          opacity: 1;
+        }
+      }
+      .popup {
+        animation: slide-up 0.5s ease-in-out;
+        background-color: #EFEFEF;
+        color: rgb(0, 0, 0);  
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 30px;
+        border: 2px solid #333;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+        overflow: auto;
+      }
+      .popup.show {
+          opacity: 1;
+        }
+      .box2 {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 20px;
+        position: relative;
+      }
+      .container-flex {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+      #threshold-value {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: #fff;
+        padding: 5px;
+      }
+      .container {
+       text-align: center;
+      }
+      .box {
+        display: inline-block;
+        width: 750px;
+        height: 95%;
+        background-color: #7ad1b9;
+        margin: 10px;
+        border: 1px solid #5dad6d;
+        border-radius: 10px;
+        box-shadow: 3px 3px #498f51;
+        padding: 20px;
+      }
+      .form-signin {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+
+      input[type=file] {
+        margin-bottom: 10px;
+      }
+
+      button {
+        margin-top: 20px;
+      }
+      .form-control-file {
+        margin: 0 auto;
+        display: block;
+      }
+      label {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        display: block;
+        text-align: left;
+      }
+      .btn-primary {
+        background-color: #4a61a1;
+        border-color: #1b42ac;
+      }
+      .btn-primary:hover {
+        background-color: #4a61a1;
+        border-color: #1b42ac;
+      }
+      .mt-5 {
+        margin-top: 50px;
+      }
+      .btn {
+        width: 250px;
+      }
+      .container-flex {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+      }
+      .slidecontainer {
+        width: 100%; /* Width of the outside container */
+        position: relative; /* Enable absolute positioning for labels */
+      }
+      /* The slider itself */
+      .slider {
+        -webkit-appearance: none;  /* Override default CSS styles */
+        appearance: none;
+        width: 100%; /* Full-width */
+        height: 25px; /* Specified height */
+        background: #d3d3d3; /* Grey background */
+        outline: none; /* Remove outline */
+        opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+        -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+        transition: opacity .2s;
+      }
+      /* Mouse-over effects */
+      .slider:hover {
+        opacity: 1; /* Fully shown on mouse-over */
+      }
+      /*The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none; /* Override default look */
+        appearance: none;
+        width: 30px; /* Set a specific slider handle width */
+        height: 30px; /* Slider handle height */
+        background: #04AA6D; /* Green background */
+        cursor: pointer; /* Cursor on hover */
+        border-radius: 50%; /* Make handle circular */
+        border: none; /* Remove border */
+      }
+      .slider::-moz-range-thumb {
+        width: 30px; /* Set a specific slider handle width */
+        height: 30px; /* Slider handle height */
+        background: #04AA6D; /* Green background */
+        cursor: pointer; /* Cursor on hover */
+        border-radius: 50%; /* Make handle circular */
+        border: none; /* Remove border */
+      }
+
+      /* Labels for the slider */
+      .slider-label {
+        position: absolute; /* Position labels absolutely */
+        top: -15px; /* Position labels above the slider */
+        font-size: 12px; /* Set font size */
+        color: #999; /* Set label color */
+      }
+      .button-container {
+        text-align: right;
+      }
+      body {
+        font-family: 'Open Sans', sans-serif;
+      }
+      .buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+      }
+      .buttons button {
+        margin-left: 10px;
+      }
+      .popup h2 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .popup h2 i {
+        cursor: pointer;
+      }
+      </style>
+    
+    <title>yolov7 object detection</title>
+  </head>
+  <body >
+    <div id="popup" class="popup">
+      <h2>Save image popup <i class="fas fa-times" onclick="hidePopup()"></i></h2>
+      <p>Are you sure you want to save this image? If you press ok, the image will be save with the annotations in the project's path inside the dataset folder.</p>
+      <div class="buttons">
+        <button class="ok" onclick="YESsaveFile()"><i class="fas fa-check"></i> Yes </button>
+        <button class="cancel" onclick="hidePopup()"><i class="fas fa-times"></i> No </button>
+      </div>
+    </div>
+          
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="box">
+              <form class="form-signin" method="post" enctype="multipart/form-data" name="form1">
+                <img class="mb-4" src="/static/pytorch.png" alt="" width="72">
+                <h1 class="h3 mb-3 font-weight-normal">Upload a File</h1>
+                <label for="inputfile">Choose a file:</label>
+                <input type="file" name="file" class="form-control-file" id="inputfile" >
+                <p>Slider:</p>
+                  <input type="range" min="1" max="100" value='{{ thresh }}' class="slider" name="slider" id="myRange" oninput="updateSlider(this.value)">
+                <p>Value: <span id="demo"></span></p>
+                <button class="bton btn-lg btn-primary btn-block" name="submit" type="submit" onclick="submit_form()">Upload</button>
+              </form>
+          </div> 
+        </div>
+        <div style = "padding-left: 17%;" class="col-md-4 order-md-1 d-flex flex-column justify-content-center">   
+          <div class="ml-auto">
+            <div class="button-group">
+              <button  class="bton btn-lg btn-primary" name="startIP" onclick="takePhoto()" type="submit">
+                <i class="fas fa-video"></i> Start IP Cam
+              </button>
+              <button class="btn btn-lg btn-primary" style="color: white; background-color: #209118;" type="button" onclick="saveFile()">
+                <i class="fas fa-download"></i> Save Image
+              </button>
+              <button id="clear-btn" class="btn btn-lg btn-danger" type="button">
+                <i class="fas fa-trash"></i> Clear All
+              </button>
+            </div>
+            <div class="button-group">
+              <a href="https://colab.research.google.com/github/googlecolab/colabtools/blob/master/notebooks/colab-github-demo.ipynb?select=Yolo7AM.ipynb" target="_blank">
+                <button class="btn btn-lg btn-primary" style="background-color: #676b67;">
+                  <i class="fas fa-laptop-code"></i> Train with Colab
+                </button>
+              </a>             
+              <button class="btn btn-lg btn-primary" style="background-color: #676b67;">
+                <i class="fas fa-desktop"></i> Train Locally
+              </button>
+              <button id="render-page" class="btn btn-lg btn-primary" type="button" onclick="window.location = window.location.href;">
+                <i class="fas fa-sync"></i> Refresh
+              </button>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    
+      <script src="//code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+      <script src="//stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </div>
+    <div class="box2">
+      <div class="container-flex">
+        <img id="my-image" src="{{ url_for('display', filename=image_path) }}" />
+        <p id="threshold-value"> Cofidence threshold: {{thresh}} %</p>
+        <ul id="my-list">
+          {% for item in variavel %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    
+  <script>
+    function takePhoto(){
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "http://localhost:5000/takePhoto");
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.send("takePhoto=" + 1);
+    }
+
+    document.getElementById("my-image").onload = function() {
+      this.style.display = "block";
+    };
+
+    async function refreshPageifNewpage() {
+      const response = await fetch('http://localhost:5000/image_change');
+      const jsonData = await response.json();
+      if (jsonData.image_changed === true)
+        {
+          window.location = window.location.href;
+        }
+    }
+    window.onload = function() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "http://localhost:5000/sliderValue");
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.send("sliderValue=" + 50);
+    };
+    setInterval(refreshPageifNewpage, 5000); 
+
+    var popup = document.getElementById('popup');
+    const imagePath = '{{ image_path }}';
+    let errors = '{{ variavel }}';
+    console.log(errors)
+		function saveFile() {
+      if ( imagePath.trim() === '' || errors === '[&#39;There are no defects in this image. Try to decrease the threshold value.&#39;]') {
+			  alert("First you must have a image")
+      }
+      else{
+        popup.style.display = 'block';
+      } 
+		}
+    function YESsaveFile(){
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "http://localhost:5000/save");
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.send("imagePath=" + imagePath);
+      hidePopup();
+      
+      alert("Image saved in the dataset folder!")
+    }
+
+		function hidePopup() {
+			popup.style.display = 'none';
+		}
+
+    function submit_form() {
+        // logic to save the file
+        document.form1.submit();
+        document.form1.reset();
+    }
+
+    $(document).ready(function() {
+      $("#clear-btn").click(function() {
+        $("#my-image").attr("src", "");
+        document.getElementById("my-list").innerHTML = "";
+      });
+    });
+
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("demo");
+    output.innerHTML = slider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    slider.oninput = function() {
+      output.innerHTML = this.value;
+    }
+
+    slider.onload= function() {
+      console.log("Slider value:", this.value);
+    }
+
+    slider.onchange= function() {
+      var xhr = new XMLHttpRequest();
+      console.log("Slider value:", this.value);
+      xhr.open("POST", "http://localhost:5000/sliderValue");
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.send("sliderValue=" + this.value);
+    }
+
+    let isDragging = false;
+    let dragStartX, dragStartY;
+    let initialX, initialY;
+
+    popup.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      initialX = popup.offsetLeft;
+      initialY = popup.offsetTop;
+    });
+
+    popup.addEventListener("mousemove", (e) => {
+      if (isDragging) {
+        const dragX = e.clientX - dragStartX;
+        const dragY = e.clientY - dragStartY;
+        popup.style.left = `${initialX + dragX}px`;
+        popup.style.top = `${initialY + dragY}px`;
+      }
+    });
+
+    popup.addEventListener("mouseup", () => {
+      isDragging = false;
+    });
+
+  </script>
+  </body>
+</html>

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <style>
+      .container {
+        text-align: center;
+      }
+      .box {
+        display: inline-block;
+        width: 750px;
+        height: 95%;
+        background-color: #7ad1b9;
+        margin: 10px;
+        border: 1px solid #5dad6d;
+        border-radius: 10px;
+        box-shadow: 3px 3px #498f51;
+        padding: 20px;
+      }
+      .form-signin {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+
+      input[type=file] {
+        margin-bottom: 10px;
+      }
+
+      button {
+        margin-top: 20px;
+      }
+      .form-control-file {
+        margin: 0 auto;
+        display: block;
+      }
+      label {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        display: block;
+        text-align: left;
+      }
+      .btn-primary {
+        background-color: #4a61a1;
+        border-color: #1b42ac;
+      }
+      .btn-primary:hover {
+        background-color: #4a61a1;
+        border-color: #1b42ac;
+      }
+      .mt-5 {
+        margin-top: 50px;
+      }
+      .btn {
+        width: 250px;
+      }
+      .container-flex {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+      }
+      </style>
+
+    <title>yolov7 object detection</title>
+  </head>
+  <body >
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+            <div class="box">
+                <form class="form-signin" method="post" enctype="multipart/form-data" name="form1">
+                    <img class="mb-4" src="/static/pytorch.png" alt="" width="72">
+                    <h1 class="h3 mb-3 font-weight-normal">You can upload manually </h1>
+                    <label for="inputfile">Choose a file:</label>
+                    <input type="file" name="file" class="form-control-file" id="inputfile" >
+                    <button class="bton btn-lg btn-primary btn-block" type="submit">Upload</button>
+                </form>
+            </div>
+        </div>
+        <div style="padding-left: 10%;" class="col-md-4 d-flex flex-column justify-content-center">
+            <button style= "background-color:grey; " class="btn btn-lg btn-primary m-3" type="button">Train with colab</button>
+            <button style= "background-color:grey; " class="btn btn-lg btn-primary m-3" type="button">Train locally</button>
+            <button style= "background-color:grey; " class="btn btn-lg btn-primary m-3" type="button">Start IP cam manually</button>
+            <button class="btn btn-lg btn-primary m-3" style="color: white; background-color: #209118; " type="button" onclick="saveFile()">Save image</button>
+            <button id="clear-btn"  style= "background-color:red; " class="btn btn-lg btn-primary m-3" type="button">Clear all</button>
+        </div>
+      </div>
+      <script src="//code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+      <script src="//stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </div>
+    <div class="container-flex">
+      <img id="my-image" src="/runs/detect/exp40/image.jpg" style="height:640; width:640px"/>
+      <ul id="my-list">
+
+          <li>Stringging: -Try increasing the retraction distance by 1mm
+-Try adjust the retraction speed to 1200-6000 mm/min (20-100 mm/s)
+-Try decreasing your extruder temperature by 5-10 degrees
+-Be aware that in long movements stringing is more likely to happen.</li>
+
+      </ul>
+    </div>
+
+  <script>
+  document.getElementById("my-image").onload = function() {
+    this.style.display = "block";
+  };
+  function saveFile() {
+        // logic to save the file
+        alert("File saved successfully!");
+    }
+    $(document).ready(function() {
+      $("#clear-btn").click(function() {
+        $("#my-image").attr("src", "");
+        document.getElementById("my-list").innerHTML = "";
+      });
+    });
+  </script>
+  </div>
+  </body>
+</html>
